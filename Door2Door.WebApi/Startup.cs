@@ -1,7 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Security;
 using System.Threading.Tasks;
+using Door2Door.WebApi.ApplicationServices;
+using Door2Door.WebApi.DomainServices;
+using Door2Door.WebApi.InfrastructureServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +31,18 @@ namespace Door2Door.WebApi
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			// Infrastructure Service
+			services.AddTransient<SqlConnection>(s =>
+			{
+				return new SqlConnection(Environment.GetEnvironmentVariable("SQL_CONNECTION_STRING"));
+			});
+			services.AddScoped<IDatabaseInfrastructureService, DatabaseInfrastructureService>();
+
+			// Domain Service
+			services.AddScoped<IMapDomainService, MapDomainService>();
+
+			// Application Service
+			services.AddScoped<IMapApplicationService, MapApplicationService>();
 
 			services.AddControllers();
 			services.AddSwaggerGen(c =>

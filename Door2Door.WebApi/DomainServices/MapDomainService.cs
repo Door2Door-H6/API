@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Door2Door.WebApi.InfrastructureServices;
+using Door2Door.WebApi.Models;
 using Door2Door.WebApi.Models.GeoJson;
 using Microsoft.Extensions.Logging;
 
@@ -10,69 +10,82 @@ namespace Door2Door.WebApi.DomainServices
 {
 	public interface IMapDomainService
 	{
-		Task<List<GeoJson>> GetAllGeoJsonAsync(string location, int level);
-		Task<GeoJson> GetGeoJson(string location, int level);
+		Task<List<CatagoriesWithRooms>> GetMapCatagoriesAndRoomsAsync(string location);
+		Task<GeoJson> GetMapPathAsync(string location);
+		Task<GeoJson> GetMapPoiAsync(string location);
+		Task<GeoJson> GetMapRoomsAsync(string location);
+		Task<GeoJson> GetMapWallsAsync(string location);
 	}
 
 	public class MapDomainService : IMapDomainService
 	{
-		private readonly RepositoryContext _repositoryContext;
+		private readonly IDatabaseInfrastructureService _databaseInfrastructureService;
 		private readonly ILogger<MapDomainService> _logger;
 
-		public MapDomainService(RepositoryContext repositoryContext, ILogger<MapDomainService> ilogger)
+		public MapDomainService(IDatabaseInfrastructureService databaseInfrastructureService, ILogger<MapDomainService> ilogger)
 		{
-			_repositoryContext = repositoryContext;
+			_databaseInfrastructureService = databaseInfrastructureService;
 			_logger = ilogger;
 		}
 
-		public async Task<GeoJson> GetGeoJson(string location, int level)
+		public async Task<GeoJson> GetMapWallsAsync(string location)
 		{
-			List<Feature> features = await _repositoryContext.Get(location, level);
+			GeoJson result = await _databaseInfrastructureService.GetMapWallsAsync(location);
 
-			if (!features.Any())
+			if (result is null)
+			{
+				_logger.LogError("");
+			}
+			 
+			return result;
+		}
+
+		public async Task<GeoJson> GetMapRoomsAsync(string location)
+		{
+			GeoJson result = await _databaseInfrastructureService.GetMapRoomsAsync(location);
+
+			if (result is null)
 			{
 				_logger.LogError("");
 			}
 
-			return GenerateGeoJson($"{location}-{level}", features);
+			return result;
 		}
 
-		public async Task<List<GeoJson>> GetAllGeoJsonAsync(string location, int level)
+		public async Task<GeoJson> GetMapPoiAsync(string location)
 		{
-			List<List<Feature>> features = await _repositoryContext.Get(location, level);
+			GeoJson result = await _databaseInfrastructureService.GetMapPoiAsync(location);
 
-			if (!features.Any())
+			if (result is null)
 			{
 				_logger.LogError("");
 			}
 
-			List<GeoJson> geoJsons = new();
+			return result;
+		}
 
-			foreach (List<Feature> feature in features)
+		public async Task<GeoJson> GetMapPathAsync(string location)
+		{
+			GeoJson result = await _databaseInfrastructureService.GetMapPathAsync(location);
+
+			if (result is null)
 			{
-				geoJsons.Add(GenerateGeoJson($"{location}",feature));
+				_logger.LogError("");
 			}
 
-			return geoJsons;
+			return result;
 		}
 
-		public GeoJson GenerateGeoJson(string name, List<Feature> features)
+		public async Task<List<CatagoriesWithRooms>> GetMapCatagoriesAndRoomsAsync(string location)
 		{
-			return new GeoJson
-			{
-				Type = "FeatureCollection",
-				Name = name,
-				Crs = new Crs
-				{
-					Type = "name",
-					Properties = new Properties
-					{
-						Name = "urn:ogc:def:crs:EPSG::3395"
-					}
-				},
-				Features = features
-			};
-		}
+			List<CatagoriesWithRooms> result = await _databaseInfrastructureService.GetMapCatagoriesAndRoomsAsync(location);
 
+			if (!result.Any())
+			{
+				_logger.LogError("");
+			}
+
+			return result;
+		}
 	}
 }

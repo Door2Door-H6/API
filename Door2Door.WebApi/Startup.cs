@@ -34,7 +34,8 @@ namespace Door2Door.WebApi
 			// Infrastructure Service
 			services.AddTransient<SqlConnection>(s =>
 			{
-				return new SqlConnection(Environment.GetEnvironmentVariable("SQL_CONNECTION_STRING"));
+				string conn = Environment.GetEnvironmentVariable("SQL_CONNECTION_STRING");
+				return new SqlConnection(conn);
 			});
 			services.AddScoped<IDatabaseInfrastructureService, DatabaseInfrastructureService>();
 

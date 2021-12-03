@@ -50,14 +50,16 @@ namespace Door2Door.WebApi.InfrastructureServices
 		/// <returns></returns>
 		public async Task<GeoJson> GetMapWallsAsync(string location)
 		{
-			string procedureName = "";
+			string procedureName = "GetWalls";
 
 			DynamicParameters parameters = new();
 			parameters.Add("@location", location);
 
 			try
 			{
-				return await ExecuteProcedure<GeoJson>(procedureName, parameters);
+				var result = await ExecuteProcedure<string>(procedureName, parameters);
+
+				return new GeoJson();
 			}
 			catch (Exception)
 			{

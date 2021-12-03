@@ -50,6 +50,16 @@ namespace Door2Door.WebApi
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "Door2Door.WebApi", Version = "v1" });
 			});
+
+			services.AddCors(o =>
+			{
+				o.AddPolicy("Door2door", builder =>
+				{
+					builder.AllowAnyOrigin();
+					builder.AllowAnyMethod();
+					builder.AllowAnyHeader();
+				});
+			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,7 +75,7 @@ namespace Door2Door.WebApi
 			app.UseHttpsRedirection();
 
 			app.UseRouting();
-
+			app.UseCors();
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>

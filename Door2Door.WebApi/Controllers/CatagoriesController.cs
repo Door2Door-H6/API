@@ -22,9 +22,9 @@ namespace Door2Door.WebApi.Controllers
 		[HttpGet]
 		public async Task<JsonResult> Get(string location)
 		{
-			List<CatagoriesWithRooms> result = await _mapApplicationService.GetMapCatagoriesAndRoomsAsync(location);
+			string result = await _mapApplicationService.GetMapCatagoriesAndRoomsAsync(location);
 
-			if (!result.Any())
+			if (string.IsNullOrWhiteSpace(result))
 			{
 				Response.StatusCode = StatusCodes.Status404NotFound;
 				return new JsonResult(null);

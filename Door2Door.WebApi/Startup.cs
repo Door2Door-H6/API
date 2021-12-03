@@ -80,7 +80,7 @@ namespace Door2Door.WebApi
 
 			app.UseEndpoints(endpoints =>
 			{
-				endpoints.MapControllers();
+				endpoints.MapControllers().RequireCors("Door2door");
 			});
 		}
 	}

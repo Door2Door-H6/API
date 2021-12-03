@@ -72,7 +72,7 @@ namespace Door2Door.WebApi.InfrastructureServices
 		/// <returns></returns>
 		public async Task<IEnumerable<string>> GetMapRoomsAsync(string location)
 		{
-			string procedureName = "";
+			string procedureName = "GetRooms";
 
 			DynamicParameters parameters = new();
 			parameters.Add("@location", location);
@@ -90,7 +90,7 @@ namespace Door2Door.WebApi.InfrastructureServices
 
 		public async Task<IEnumerable<string>> GetMapRoomLabelsAsync(string location)
 		{
-			string procedureName = "";
+			string procedureName = "GetRoomLabels";
 
 			DynamicParameters parameters = new();
 			parameters.Add("@location", location);
@@ -113,7 +113,7 @@ namespace Door2Door.WebApi.InfrastructureServices
 		/// <returns></returns>
 		public async Task<IEnumerable<string>> GetMapPoiAsync(string location)
 		{
-			string procedureName = "";
+			string procedureName = "GetPois";
 
 			DynamicParameters parameters = new();
 			parameters.Add("@location", location);
@@ -136,7 +136,7 @@ namespace Door2Door.WebApi.InfrastructureServices
 		/// <returns></returns>
 		public async Task<IEnumerable<string>> GetMapPathAsync(string location)
 		{
-			string procedureName = "";
+			string procedureName = "GetPaths";
 
 			DynamicParameters parameters = new();
 			parameters.Add("@location", location);
@@ -159,7 +159,7 @@ namespace Door2Door.WebApi.InfrastructureServices
 		/// <returns>The categories and its rooms on location</returns>
 		public async Task<IEnumerable<string>> GetMapCatagoriesAndRoomsAsync(string location)
 		{
-			string procedureName = "";
+			string procedureName = "GetCategories";
 
 			DynamicParameters parameters = new();
 			parameters.Add("@location", location);

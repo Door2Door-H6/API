@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Door2Door.WebApi.DomainServices;
 using Door2Door.WebApi.Models;
-using Door2Door.WebApi.Models.GeoJson;
 using Microsoft.Extensions.Logging;
 
 namespace Door2Door.WebApi.ApplicationServices
@@ -11,10 +10,10 @@ namespace Door2Door.WebApi.ApplicationServices
 	public interface IMapApplicationService
 	{
 		Task<List<CatagoriesWithRooms>> GetMapCatagoriesAndRoomsAsync(string location);
-		Task<GeoJson> GetMapPathAsync(string location);
-		Task<GeoJson> GetMapPoiAsync(string location);
-		Task<GeoJson> GetMapRoomsAsync(string location);
-		Task<GeoJson> GetMapWallsAsync(string location);
+		Task<string> GetMapPathAsync(string location);
+		Task<string> GetMapPoiAsync(string location);
+		Task<string> GetMapRoomsAsync(string location);
+		Task<string> GetMapWallsAsync(string location);
 	}
 
 	public class MapApplicationService : IMapApplicationService
@@ -28,7 +27,7 @@ namespace Door2Door.WebApi.ApplicationServices
 			_logger = logger;
 		}
 
-		public async Task<GeoJson> GetMapWallsAsync(string location)
+		public async Task<string> GetMapWallsAsync(string location)
 		{
 			if (string.IsNullOrEmpty(location))
 			{
@@ -42,11 +41,11 @@ namespace Door2Door.WebApi.ApplicationServices
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, "");
-				return new GeoJson();
+				return string.Empty;
 			}
 		}
 
-		public async Task<GeoJson> GetMapRoomsAsync(string location)
+		public async Task<string> GetMapRoomsAsync(string location)
 		{
 			if (string.IsNullOrEmpty(location))
 			{
@@ -60,11 +59,11 @@ namespace Door2Door.WebApi.ApplicationServices
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, "");
-				return new GeoJson();
+				return string.Empty;
 			}
 		}
 
-		public async Task<GeoJson> GetMapPoiAsync(string location)
+		public async Task<string> GetMapPoiAsync(string location)
 		{
 			if (string.IsNullOrEmpty(location))
 			{
@@ -78,11 +77,11 @@ namespace Door2Door.WebApi.ApplicationServices
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, "");
-				return new GeoJson();
+				return string.Empty;
 			}
 		}
 
-		public async Task<GeoJson> GetMapPathAsync(string location)
+		public async Task<string> GetMapPathAsync(string location)
 		{
 			if (string.IsNullOrEmpty(location))
 			{
@@ -96,7 +95,7 @@ namespace Door2Door.WebApi.ApplicationServices
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, "");
-				return new GeoJson();
+				return string.Empty;
 			}
 		}
 

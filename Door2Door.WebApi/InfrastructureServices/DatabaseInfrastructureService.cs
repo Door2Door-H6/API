@@ -5,7 +5,6 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Dapper;
 using Door2Door.WebApi.Models;
-using Door2Door.WebApi.Models.GeoJson;
 using Microsoft.Extensions.Logging;
 
 namespace Door2Door.WebApi.InfrastructureServices
@@ -16,10 +15,10 @@ namespace Door2Door.WebApi.InfrastructureServices
 	public interface IDatabaseInfrastructureService
 	{
 		Task<List<CatagoriesWithRooms>> GetMapCatagoriesAndRoomsAsync(string location);
-		Task<GeoJson> GetMapPathAsync(string location);
-		Task<GeoJson> GetMapPoiAsync(string location);
-		Task<GeoJson> GetMapRoomsAsync(string location);
-		Task<GeoJson> GetMapWallsAsync(string location);
+		Task<string> GetMapPathAsync(string location);
+		Task<string> GetMapPoiAsync(string location);
+		Task<string> GetMapRoomsAsync(string location);
+		Task<string> GetMapWallsAsync(string location);
 	}
 
 	/// <summary>
@@ -48,7 +47,7 @@ namespace Door2Door.WebApi.InfrastructureServices
 		/// </summary>
 		/// <param name="location"></param>
 		/// <returns></returns>
-		public async Task<GeoJson> GetMapWallsAsync(string location)
+		public async Task<string> GetMapWallsAsync(string location)
 		{
 			string procedureName = "GetWalls";
 
@@ -57,9 +56,7 @@ namespace Door2Door.WebApi.InfrastructureServices
 
 			try
 			{
-				var result = await ExecuteProcedure<string>(procedureName, parameters);
-
-				return new GeoJson();
+				return await ExecuteProcedure<string>(procedureName, parameters);
 			}
 			catch (Exception)
 			{
@@ -73,7 +70,7 @@ namespace Door2Door.WebApi.InfrastructureServices
 		/// </summary>
 		/// <param name="location"></param>
 		/// <returns></returns>
-		public async Task<GeoJson> GetMapRoomsAsync(string location)
+		public async Task<string> GetMapRoomsAsync(string location)
 		{
 			string procedureName = "";
 
@@ -82,7 +79,7 @@ namespace Door2Door.WebApi.InfrastructureServices
 
 			try
 			{
-				return await ExecuteProcedure<GeoJson>(procedureName, parameters);
+				return await ExecuteProcedure<string>(procedureName, parameters);
 			}
 			catch (Exception)
 			{
@@ -96,7 +93,7 @@ namespace Door2Door.WebApi.InfrastructureServices
 		/// </summary>
 		/// <param name="location"></param>
 		/// <returns></returns>
-		public async Task<GeoJson> GetMapPoiAsync(string location)
+		public async Task<string> GetMapPoiAsync(string location)
 		{
 			string procedureName = "";
 
@@ -105,7 +102,7 @@ namespace Door2Door.WebApi.InfrastructureServices
 
 			try
 			{
-				return await ExecuteProcedure<GeoJson>(procedureName, parameters);
+				return await ExecuteProcedure<string>(procedureName, parameters);
 			}
 			catch (Exception)
 			{
@@ -119,7 +116,7 @@ namespace Door2Door.WebApi.InfrastructureServices
 		/// </summary>
 		/// <param name="location"></param>
 		/// <returns></returns>
-		public async Task<GeoJson> GetMapPathAsync(string location)
+		public async Task<string> GetMapPathAsync(string location)
 		{
 			string procedureName = "";
 
@@ -128,7 +125,7 @@ namespace Door2Door.WebApi.InfrastructureServices
 
 			try
 			{
-				return await ExecuteProcedure<GeoJson>(procedureName, parameters);
+				return await ExecuteProcedure<string>(procedureName, parameters);
 			}
 			catch (Exception)
 			{

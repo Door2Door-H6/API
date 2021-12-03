@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Door2Door.WebApi.ApplicationServices;
-using Door2Door.WebApi.Models.GeoJson;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,12 +14,13 @@ namespace Door2Door.WebApi.Controllers
 		public PathController(IMapApplicationService mapApplicationService)
 		{
 			_mapApplicationService = mapApplicationService;
+			_mapApplicationService = mapApplicationService;
 		}
 
 		[HttpGet]
-		public async Task<JsonResult> Get(string location)
+		public async Task<JsonResult> Get(int standId, string roomName)
 		{
-			string result = await _mapApplicationService.GetMapPathAsync(location);
+			string result = await _mapApplicationService.GetMapPathAsync(standId, roomName);
 
 			if (string.IsNullOrWhiteSpace(result))
 			{

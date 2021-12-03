@@ -3,14 +3,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Door2Door.WebApi.InfrastructureServices;
+using Door2Door.WebApi.Models;
 using Microsoft.Extensions.Logging;
 
 namespace Door2Door.WebApi.DomainServices
 {
 	public interface IMapDomainService
 	{
-		Task<string> GetMapCatagoriesAndRoomsAsync(string location);
-		Task<string> GetMapPathAsync(string location);
+		Task<List<CatagoriesWithRooms>> GetMapCatagoriesAndRoomsAsync(string location);
+		Task<string> GetMapPathAsync(int standId, string roomName);
 		Task<string> GetMapPoiAsync(string location);
 		Task<string> GetMapRoomLabelsAsync(string location);
 		Task<string> GetMapRoomsAsync(string location);
@@ -104,9 +105,9 @@ namespace Door2Door.WebApi.DomainServices
 			return stringBuilder.ToString();
 		}
 
-		public async Task<string> GetMapPathAsync(string location)
+		public async Task<string> GetMapPathAsync(int standId, string roomName)
 		{
-			IEnumerable<string> result = await _databaseInfrastructureService.GetMapPathAsync(location);
+			IEnumerable<string> result = await _databaseInfrastructureService.GetMapPathAsync(standId, roomName);
 
 			if (!result.Any())
 			{
@@ -123,23 +124,24 @@ namespace Door2Door.WebApi.DomainServices
 			return stringBuilder.ToString();
 		}
 
-		public async Task<string> GetMapCatagoriesAndRoomsAsync(string location)
+		public async Task<List<CatagoriesWithRooms>> GetMapCatagoriesAndRoomsAsync(string location)
 		{
-			IEnumerable<string> result = await _databaseInfrastructureService.GetMapCatagoriesAndRoomsAsync(location);
+			IEnumerable<Room> result = await _databaseInfrastructureService.GetMapCatagoriesAndRoomsAsync(location);
 
 			if (!result.Any())
 			{
 				_logger.LogError("");
 			}
 
-			StringBuilder stringBuilder = new();
+			List<string> roomTypes = result.Select(x => x.TypeName).Distinct().ToList();
+			List<CatagoriesWithRooms> catagoriesWithRooms = new();
 
-			foreach (string str in result)
+			foreach (string room in roomTypes)
 			{
-				stringBuilder.Append(str);
+				catagoriesWithRooms.Add(new CatagoriesWithRooms { Name = room, Rooms = result.Where(x => x.TypeName == room).Select(x => x.Name).ToList() });
 			}
 
-			return stringBuilder.ToString();
+			return catagoriesWithRooms;
 		}
 	}
 }

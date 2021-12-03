@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Door2Door.WebApi.ApplicationServices;
-using Door2Door.WebApi.Models.GeoJson;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

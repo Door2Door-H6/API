@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Dapper;
+using Door2Door.WebApi.Models;
 using Microsoft.Extensions.Logging;
 
 namespace Door2Door.WebApi.InfrastructureServices
@@ -13,12 +14,12 @@ namespace Door2Door.WebApi.InfrastructureServices
 	/// </summary>
 	public interface IDatabaseInfrastructureService
 	{
-		Task<IEnumerable<string>> GetMapCatagoriesAndRoomsAsync(string location);
-		Task<IEnumerable<string>> GetMapPathAsync(string location);
+		Task<IEnumerable<Room>> GetMapCatagoriesAndRoomsAsync(string location);
 		Task<IEnumerable<string>> GetMapPoiAsync(string location);
 		Task<IEnumerable<string>> GetMapRoomLabelsAsync(string location);
 		Task<IEnumerable<string>> GetMapRoomsAsync(string location);
 		Task<IEnumerable<string>> GetMapWallsAsync(string location);
+		Task<IEnumerable<string>> GetMapPathAsync(int standId, string roomName);
 	}
 
 	/// <summary>
@@ -134,12 +135,13 @@ namespace Door2Door.WebApi.InfrastructureServices
 		/// </summary>
 		/// <param name="location"></param>
 		/// <returns></returns>
-		public async Task<IEnumerable<string>> GetMapPathAsync(string location)
+		public async Task<IEnumerable<string>> GetMapPathAsync(int standId, string roomName)
 		{
 			string procedureName = "GetPaths";
 
 			DynamicParameters parameters = new();
-			parameters.Add("@location", location);
+			parameters.Add("@startPoiId", standId);
+			parameters.Add("@endPoiName", roomName);
 
 			try
 			{
@@ -157,7 +159,7 @@ namespace Door2Door.WebApi.InfrastructureServices
 		/// </summary>
 		/// <param name="location"></param>
 		/// <returns>The categories and its rooms on location</returns>
-		public async Task<IEnumerable<string>> GetMapCatagoriesAndRoomsAsync(string location)
+		public async Task<IEnumerable<Room>> GetMapCatagoriesAndRoomsAsync(string location)
 		{
 			string procedureName = "GetCategories";
 
@@ -166,7 +168,9 @@ namespace Door2Door.WebApi.InfrastructureServices
 
 			try
 			{
-				return await ExecuteProcedure<string>(procedureName, parameters);
+				var result = await ExecuteProcedure<Room>(procedureName, parameters);
+
+				return result;
 			}
 			catch (Exception)
 			{

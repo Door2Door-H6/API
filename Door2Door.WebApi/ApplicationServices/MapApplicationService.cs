@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Door2Door.WebApi.DomainServices;
 using Microsoft.Extensions.Logging;
@@ -7,8 +8,8 @@ namespace Door2Door.WebApi.ApplicationServices
 {
 	public interface IMapApplicationService
 	{
-		Task<string> GetMapCatagoriesAndRoomsAsync(string location);
-		Task<string> GetMapPathAsync(string location);
+		Task<List<Models.CatagoriesWithRooms>> GetMapCatagoriesAndRoomsAsync(string location);
+		Task<string> GetMapPathAsync(int standId, string roomName);
 		Task<string> GetMapPoiAsync(string location);
 		Task<string> GetMapRoomLabelsAsync(string location);
 		Task<string> GetMapRoomsAsync(string location);
@@ -98,16 +99,16 @@ namespace Door2Door.WebApi.ApplicationServices
 			}
 		}
 
-		public async Task<string> GetMapPathAsync(string location)
+		public async Task<string> GetMapPathAsync(int standId, string roomName)
 		{
-			if (string.IsNullOrEmpty(location))
+			if (string.IsNullOrEmpty(roomName))
 			{
-				throw new ArgumentException($"'{nameof(location)}' cannot be null or empty.", nameof(location));
+				throw new ArgumentException($"'{nameof(roomName)}' cannot be null or empty.", nameof(roomName));
 			}
 
 			try
 			{
-				return await _mapDomainService.GetMapPathAsync(location);
+				return await _mapDomainService.GetMapPathAsync(standId, roomName);
 			}
 			catch (Exception ex)
 			{
@@ -116,7 +117,7 @@ namespace Door2Door.WebApi.ApplicationServices
 			}
 		}
 
-		public async Task<string> GetMapCatagoriesAndRoomsAsync(string location)
+		public async Task<List<Models.CatagoriesWithRooms>> GetMapCatagoriesAndRoomsAsync(string location)
 		{
 			if (string.IsNullOrEmpty(location))
 			{
@@ -130,7 +131,7 @@ namespace Door2Door.WebApi.ApplicationServices
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, "");
-				return string.Empty;
+				return new List<Models.CatagoriesWithRooms>();
 			}
 		}
 	}

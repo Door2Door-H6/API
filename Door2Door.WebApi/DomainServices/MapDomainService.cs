@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Door2Door.WebApi.InfrastructureServices;
 using Door2Door.WebApi.Models;
@@ -29,50 +30,78 @@ namespace Door2Door.WebApi.DomainServices
 
 		public async Task<string> GetMapWallsAsync(string location)
 		{
-			string result = await _databaseInfrastructureService.GetMapWallsAsync(location);
+			IEnumerable<string> result = await _databaseInfrastructureService.GetMapWallsAsync(location);
 
-			if (string.IsNullOrWhiteSpace(result))
+			if (!result.Any())
 			{
 				_logger.LogError("");
 			}
 
-			return result;
+			StringBuilder stringBuilder = new();
+
+			foreach (string str in result)
+			{
+				stringBuilder.Append(str);
+			}
+
+			return stringBuilder.ToString();
 		}
 
 		public async Task<string> GetMapRoomsAsync(string location)
 		{
-			string result = await _databaseInfrastructureService.GetMapRoomsAsync(location);
+			IEnumerable<string> result = await _databaseInfrastructureService.GetMapRoomsAsync(location);
 
-			if (string.IsNullOrWhiteSpace(result))
+			if (!result.Any())
 			{
 				_logger.LogError("");
 			}
 
-			return result;
+			StringBuilder stringBuilder = new();
+
+			foreach (string str in result)
+			{
+				stringBuilder.Append(str);
+			}
+
+			return stringBuilder.ToString();
 		}
 
 		public async Task<string> GetMapPoiAsync(string location)
 		{
-			string result = await _databaseInfrastructureService.GetMapPoiAsync(location);
+			IEnumerable<string> result = await _databaseInfrastructureService.GetMapPoiAsync(location);
 
-			if (string.IsNullOrWhiteSpace(result))
+			if (!result.Any())
 			{
 				_logger.LogError("");
 			}
 
-			return result;
+			StringBuilder stringBuilder = new();
+
+			foreach (string str in result)
+			{
+				stringBuilder.Append(str);
+			}
+
+			return stringBuilder.ToString();
 		}
 
 		public async Task<string> GetMapPathAsync(string location)
 		{
-			string result = await _databaseInfrastructureService.GetMapPathAsync(location);
+			IEnumerable<string> result = await _databaseInfrastructureService.GetMapPathAsync(location);
 
-			if (string.IsNullOrWhiteSpace(result))
+			if (!result.Any())
 			{
 				_logger.LogError("");
 			}
 
-			return result;
+			StringBuilder stringBuilder = new();
+
+			foreach (string str in result)
+			{
+				stringBuilder.Append(str);
+			}
+
+			return stringBuilder.ToString();
 		}
 
 		public async Task<List<CatagoriesWithRooms>> GetMapCatagoriesAndRoomsAsync(string location)

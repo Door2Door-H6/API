@@ -15,10 +15,10 @@ namespace Door2Door.WebApi.InfrastructureServices
 	public interface IDatabaseInfrastructureService
 	{
 		Task<List<CatagoriesWithRooms>> GetMapCatagoriesAndRoomsAsync(string location);
-		Task<string> GetMapPathAsync(string location);
-		Task<string> GetMapPoiAsync(string location);
-		Task<string> GetMapRoomsAsync(string location);
-		Task<string> GetMapWallsAsync(string location);
+		Task<IEnumerable<string>> GetMapPathAsync(string location);
+		Task<IEnumerable<string>> GetMapPoiAsync(string location);
+		Task<IEnumerable<string>> GetMapRoomsAsync(string location);
+		Task<IEnumerable<string>> GetMapWallsAsync(string location);
 	}
 
 	/// <summary>
@@ -47,7 +47,7 @@ namespace Door2Door.WebApi.InfrastructureServices
 		/// </summary>
 		/// <param name="location"></param>
 		/// <returns></returns>
-		public async Task<string> GetMapWallsAsync(string location)
+		public async Task<IEnumerable<string>> GetMapWallsAsync(string location)
 		{
 			string procedureName = "GetWalls";
 
@@ -70,7 +70,7 @@ namespace Door2Door.WebApi.InfrastructureServices
 		/// </summary>
 		/// <param name="location"></param>
 		/// <returns></returns>
-		public async Task<string> GetMapRoomsAsync(string location)
+		public async Task<IEnumerable<string>> GetMapRoomsAsync(string location)
 		{
 			string procedureName = "";
 
@@ -93,7 +93,7 @@ namespace Door2Door.WebApi.InfrastructureServices
 		/// </summary>
 		/// <param name="location"></param>
 		/// <returns></returns>
-		public async Task<string> GetMapPoiAsync(string location)
+		public async Task<IEnumerable<string>> GetMapPoiAsync(string location)
 		{
 			string procedureName = "";
 
@@ -116,7 +116,7 @@ namespace Door2Door.WebApi.InfrastructureServices
 		/// </summary>
 		/// <param name="location"></param>
 		/// <returns></returns>
-		public async Task<string> GetMapPathAsync(string location)
+		public async Task<IEnumerable<string>> GetMapPathAsync(string location)
 		{
 			string procedureName = "";
 
@@ -148,7 +148,9 @@ namespace Door2Door.WebApi.InfrastructureServices
 
 			try
 			{
-				return await ExecuteProcedure<List<CatagoriesWithRooms>>(procedureName, parameters);
+				var result = await ExecuteProcedure<List<CatagoriesWithRooms>>(procedureName, parameters);
+
+				return new List<CatagoriesWithRooms>();
 			}
 			catch (Exception)
 			{
@@ -164,12 +166,12 @@ namespace Door2Door.WebApi.InfrastructureServices
 		/// <param name="procedureName">Name of the stored procedure to be executed</param>
 		/// <param name="parameters">Parameters of the procedure</param>
 		/// <returns>The result of the stored procedure</returns>
-		private async Task<T> ExecuteProcedure<T>(string procedureName, DynamicParameters parameters)
+		private async Task<IEnumerable<T>> ExecuteProcedure<T>(string procedureName, DynamicParameters parameters)
 		{
 			try
 			{
 				_sqlConnection.Open();
-				return await _sqlConnection.QueryFirstOrDefaultAsync<T>(procedureName, parameters, commandType: CommandType.StoredProcedure);
+				return await _sqlConnection.QueryAsync<T>(procedureName, parameters, commandType: CommandType.StoredProcedure);
 			}
 			catch (Exception ex)
 			{
